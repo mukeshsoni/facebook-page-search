@@ -1,5 +1,6 @@
 'use strict';
 
+/*jshint unused: true */
 var utils = (function() {
     
   return {
@@ -8,7 +9,7 @@ var utils = (function() {
     },
 
     appendChildren: function(element, child) {
-      if(child instanceof Node) {
+      if(child instanceof Node) { // Probably not the best way to check if the object is a DOM Node type
         element.appendChild(child);
       } else if(typeof child === 'string') {
         element.appendChild(document.createTextNode(child));
@@ -42,6 +43,7 @@ var utils = (function() {
       for(var attr in attributes) {
         switch(attr) {
           case 'className':
+          case 'class': // some people might send across 'class' instead of className. Makes sense. Just because ES6/7 will have classes, why can't property names be class?
           case 'id':
             el[attr] = attributes[attr];
             break;

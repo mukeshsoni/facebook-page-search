@@ -1,4 +1,5 @@
 'use strict';
+/*global utils */
 
 var app = (function(window, document) {
   var resultsTable, searchResults = [], resultsContainer, searchInputBox, lastSearchText, pageSearchDetailsCache = {};
@@ -163,7 +164,7 @@ var app = (function(window, document) {
       options.className += ' star';
       options.title = 'Favorite this page';
 
-      return utils.createDOMNode('button', options, ['']);;
+      return utils.createDOMNode('button', options, ['']);
     }
   };
 
@@ -190,7 +191,7 @@ var app = (function(window, document) {
     var detailsDivNode = document.createElement('div');
     detailsDivNode.className = 'details-div';
     var propertyTextNode;
-    var boldNode, pNode;
+    var pNode;
 
     Object.keys(pageDetails).forEach(function(pageDetailName) {
       // No need to show 'id' and 'cover' (an image) attributes
@@ -242,7 +243,7 @@ var app = (function(window, document) {
       var resultRowStructure = [
         'li', {className: 'result-row'}, [
           ['ul', {}, [
-            favoriteButton, helper.getNewListItemWith('name', result.name), helper.getNewListItemWith('category', result.category), 
+            favoriteButton, helper.getNewListItemWith('name', result.name), helper.getNewListItemWith('category', result.category),
             ['details', {} , [
               ['summary', {title: 'View details', 'data-pageid': result.id, className: 'page-details'}, ['Details']]
             ]]
@@ -373,11 +374,8 @@ window.onload = function() {
 };
 
 /* TODO
-  - clear all traces of TODOs before sumitting. Yeah, adding that in TODO list is not irony.
+  - clear all traces of TODOs before sumitting. Yup, adding that in TODO list is not ironic.
   - Error handling
     - what if no internet connection
     - what about errors from facebook?
-  - memoize
-  - write generic function which takes json and blurts out DOM elements (made with document.createElement)
-  - check that functions are not dependent on global variables and can be extracted into a module whenever required
 */
