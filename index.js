@@ -84,7 +84,8 @@ var app = (function(window, document) {
   }
 
   function getAccessToken() {
-    return accessToken;
+    return localStorage.getItem('accessToken');
+    // return accessToken;
   }
 
   function searchPages(searchText, accessToken, callback) {
@@ -221,6 +222,10 @@ var app = (function(window, document) {
     }
 
     if(response && response.error) {
+      // if(response.error.message.indexOf('Invalid OAuth access token') >= 0) {
+      localStorage.removeItem('accessToken');
+      // }
+
       return showMessage('Error getting data from facebook: ' + response.error.message, 'error');
     }
 
@@ -275,6 +280,10 @@ var app = (function(window, document) {
   // this funcion is passed as a callback to facebook jsonp api for searching pages
   function handlePageSearchResults(response) {
     if(response && response.error) {
+      // if(response.error.message.indexOf('Invalid OAuth access token') >= 0) {
+        localStorage.removeItem('accessToken');
+      // }
+
       showMessage('Facebook api error: ' + response.error.message, 'error');
       return console.log('Error getting data from facebook: ' + response.error.message);
     }
@@ -384,7 +393,12 @@ var app = (function(window, document) {
       searchInputBox.value = 'pepsip';
       setFocusOnSearchBox();
 
-      accessToken = prompt('Need facebook access token');
+      if(!localStorage.getItem('accessToken')) {
+        accessToken = prompt('Need facebook access token');
+        localStorage.setItem('accessToken', accessToken);
+      } else {
+        accessToken = localStorage.getItem('accessToken');
+      }
     }
   };
 }) (window, document);
