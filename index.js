@@ -2,12 +2,9 @@
 /*global utils */
 
 var app = (function(window, document) {
-  var resultsTable, searchResults = [], resultsContainer, searchInputBox, lastSearchText, pageSearchDetailsCache = {};
-  var accessToken = '1482152068665965|0838e6b04fc6878b6447ad3e5b6fe2de';
+  var searchResults = [], resultsContainer, searchInputBox, lastSearchText, pageSearchDetailsCache = {};
+  var accessToken = '';
 
-
-
-  // network
   function getJSONP(url, callback) {
     var script = document.createElement('script');
 
@@ -70,6 +67,12 @@ var app = (function(window, document) {
     helper.removeClass(document.getElementById('results'), 'active');
   }
 
+  function showResultArea() {
+    // resultsContainer.style.display = 'block';
+    resultsContainer.style.visibility = 'visible';
+    helper.addClass(document.getElementById('results'), 'active');
+  }
+
   function toggleFavoriteClass(element) {
     if(element.className.indexOf('unfavorite') >= 0) {
       helper.removeClass(element, 'unfavorite');
@@ -78,12 +81,6 @@ var app = (function(window, document) {
       helper.removeClass(element, 'favorite');
       helper.addClass(element, 'unfavorite');
     }
-  }
-
-  function showResultArea() {
-    // resultsContainer.style.display = 'block';
-    resultsContainer.style.visibility = 'visible';
-    helper.addClass(document.getElementById('results'), 'active');
   }
 
   function getAccessToken() {
@@ -172,20 +169,20 @@ var app = (function(window, document) {
     return document.querySelector('summary[data-pageid="'+pageId+'"]');
   }
 
-  function appendPageDetails(el, pageDetails) {
-    var tempEl = el;
+  function appendPageDetails(element, pageDetails) {
+    var tempElement = element;
 
-    if(!el) {
+    if(!element) {
       return;
     }
 
     // check if details div is already attached somewhere. If yes, don't do anything
-    while(tempEl) {
-      if(tempEl.nextSibling && tempEl.nextSibling.className === 'details-div') {
+    while(tempElement) {
+      if(tempElement.nextSibling && tempElement.nextSibling.className === 'details-div') {
         return;
       }
 
-      tempEl = tempEl.nextSibling;
+      tempElement = tempElement.nextSibling;
     }
 
     var detailsDivNode = document.createElement('div');
@@ -215,10 +212,18 @@ var app = (function(window, document) {
       }
     });
 
-    el.parentNode.appendChild(detailsDivNode);
+    element.parentNode.appendChild(detailsDivNode);
   }
 
   function showPageDetails(response) {
+    if(!response) {
+      return showMessage('Couldn\'t get details from facebook. Please try later', 'warning');
+    }
+
+    if(response && response.error) {
+      return showMessage('Error getting data from facebook: ' + response.error.message, 'error');
+    }
+
     pageSearchDetailsCache[response.id] = response; // cache the result so as to avoid round trip if requested again
     appendPageDetails(getDetailsElement(response.id), response);
   }
@@ -267,21 +272,28 @@ var app = (function(window, document) {
     displayResults(searchResults);
   }
 
-  function handlePageSearchResults(results) {
-    if(results && results.error) {
-      return console.log('Error getting data from facebook: ' + results.error);
+  // this funcion is passed as a callback to facebook jsonp api for searching pages
+  function handlePageSearchResults(response) {
+    if(response && response.error) {
+      showMessage('Facebook api error: ' + response.error.message, 'error');
+      return console.log('Error getting data from facebook: ' + response.error.message);
     }
 
-    if(!results.data) {
+    if(!response.data) {
+      showMessage('Couldn\'t get data from facebook. Please try later', 'error');
       return console.log('Couldn\'t get data from facebook. Please try later');
     }
 
-    searchResults = results.data;
+    searchResults = response.data;
     displayResults(sortResultsBy(getSortField(), getSortOrder()));
   }
 
-
+  // self explantory
   function handleSearchClick() {
+    if(!utils.isOnline()) {
+      showMessage('You don\'t seem to have internet connection', 'error');
+    }
+
     if(!validateInput(searchInputBox.value)) {
       showMessage(getInputError(searchInputBox.value), 'error');
     } else {
@@ -293,22 +305,30 @@ var app = (function(window, document) {
     }
   }
 
+  // If the user presses 'Enter' in the search box
   function handleSearchKeydown(event) {
     if((event.keyCode && event.keyCode === 13) || (event.which && event.which === 13)) {
       handleSearchClick();
     }
   }
 
-  function handleDetailsClick(el) {
-    getPageDetails(el.getAttribute('data-pageid'), getAccessToken(), showPageDetails);
+  // handle click on the 'details' button
+  function handleDetailsClick(element) {
+    if(!utils.isOnline()) {
+      showMessage('You don\'t seem to have internet connection', 'error');
+    }
+
+    getPageDetails(element.getAttribute('data-pageid'), getAccessToken(), showPageDetails);
   }
 
+  // handle click on the favorite button
   function handleFavoriteClick(event) {
     var pageId = event.target.getAttribute('data-pageid');
     toggleFavorite(pageId);
     toggleFavoriteClass(event.target);
   }
 
+  // event delegation to results container. Handles clicks from favorite button and details button
   function handleContainerClick(event) {
     if(event.target && event.target.className.indexOf('favorite') >= 0) {
       handleFavoriteClick(event);
@@ -337,7 +357,6 @@ var app = (function(window, document) {
   return {
     initialize: function() {
       searchInputBox = document.getElementById('search-text');
-      resultsTable = document.querySelector('#results');
       resultsContainer = document.getElementById('results-container');
 
       hideResultArea();
@@ -362,9 +381,10 @@ var app = (function(window, document) {
         }
       });
 
-
       searchInputBox.value = 'pepsip';
       setFocusOnSearchBox();
+
+      accessToken = prompt('Need facebook access token');
     }
   };
 }) (window, document);

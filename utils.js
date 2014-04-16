@@ -8,6 +8,10 @@ var utils = (function() {
       return Object.prototype.toString.call(a) === '[object Array]';
     },
 
+    isOnline: function() {
+      return navigator && navigator.onLine;
+    },
+
     appendChildren: function(element, child) {
       if(child instanceof Node) { // Probably not the best way to check if the object is a DOM Node type
         element.appendChild(child);
