@@ -62,13 +62,11 @@ var app = (function(window, document) {
   }
 
   function hideResultArea() {
-    // resultsContainer.style.display = 'none';
     resultsContainer.style.visibility = 'hidden';
     helper.removeClass(document.getElementById('results'), 'active');
   }
 
   function showResultArea() {
-    // resultsContainer.style.display = 'block';
     resultsContainer.style.visibility = 'visible';
     helper.addClass(document.getElementById('results'), 'active');
   }
@@ -393,8 +391,8 @@ var app = (function(window, document) {
       searchInputBox.value = 'pepsip';
       setFocusOnSearchBox();
 
-      if(!localStorage.getItem('accessToken')) {
-        accessToken = prompt('Need facebook access token');
+      if(!getAccessToken()) {
+        accessToken = window.prompt('Need facebook access token');
         localStorage.setItem('accessToken', accessToken);
       } else {
         accessToken = localStorage.getItem('accessToken');
@@ -406,10 +404,3 @@ var app = (function(window, document) {
 window.onload = function() {
   app.initialize();
 };
-
-/* TODO
-  - clear all traces of TODOs before sumitting. Yup, adding that in TODO list is not ironic.
-  - Error handling
-    - what if no internet connection
-    - what about errors from facebook?
-*/
