@@ -1,0 +1,47 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Search Facebook Pages</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="text/javascript" src="utils.js"></script>
+  <script type="text/javascript" src="index.js"></script>
+</head>
+
+<body>
+  <div id="gradient"></div>
+
+  <div id="search-container">
+    <input type="search" placeholder="Enter page to search for..." id='search-text'>
+    <button id='search-button'>Search</button>
+    <span class='message' id='message-box'></span>
+    <br><br>
+    <span><b>Sort By: </b></span>
+    <input type="radio" name="sortField" value="name" checked>Name
+    <input type="radio" name="sortField" value="category">Category
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+    <span><b>Sort Order: </b></span>
+    <input type="radio" name="sortOrder" value="ascending" checked>Ascending
+    <input type="radio" name="sortOrder" value="descending">Descending
+  </div>
+  
+  <div id="results-container">
+    <br>
+    <div style="margin-left: 20px;">Total pages found: <span id="results-count"></span></div>
+    
+    <ul id="results">
+      <li>
+        <ul>
+          <li class="page-name"></li>
+          <li class="category-name"></li>
+          <li class="details-button">
+            Details ->
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</body>
+</html>
