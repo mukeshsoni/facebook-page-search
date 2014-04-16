@@ -156,27 +156,14 @@ var app = (function(window, document) {
 
       // utils.createDOMNode is pretty sweet. Almost like coke.
       return utils.createDOMNode(liNode);
-
-
-      // var li = document.createElement('li');
-      // var pNode = document.createElement('p');
-      // var boldNode = document.createElement('b');
-
-      // boldNode.appendChild(document.createTextNode(utils.capitaliseFirstLetter(propertyValue)));
-      // pNode.appendChild(document.createTextNode(utils.capitaliseFirstLetter(propertyName) + ': '));
-      // pNode.appendChild(boldNode);
-      // li.appendChild(pNode);
-
-      // return li;
     },
 
-    getNewFavoriteButton: function(className) {
-      var button = document.createElement('button');
-      button.appendChild(document.createTextNode(''));
-      button.className = 'star ' + className;
-      button.title = 'Favorite this page';
+    getNewFavoriteButton: function(options) {
+      options = options || {className: ''};
+      options.className += ' star';
+      options.title = 'Favorite this page';
 
-      return button;
+      return utils.createDOMNode('button', options, ['']);;
     }
   };
 
@@ -210,10 +197,6 @@ var app = (function(window, document) {
       if(pageDetailName !== 'id' && pageDetailName !== 'cover') {
         if(pageDetailName === 'link' || pageDetailName === 'website') {
           propertyTextNode = utils.createDOMNode(['a', {target: '_blank', href: pageDetails[pageDetailName]}, [pageDetails[pageDetailName]]]);
-          // propertyTextNode = document.createElement('a');
-          // propertyTextNode.target = '_blank';
-          // propertyTextNode.href = pageDetails[pageDetailName];
-          // propertyTextNode.appendChild(document.createTextNode(pageDetails[pageDetailName]));
         } else {
           propertyTextNode = document.createTextNode(pageDetails[pageDetailName]);
         }
@@ -227,13 +210,6 @@ var app = (function(window, document) {
         ];
 
         pNode = utils.createDOMNode(pNodeStructure);
-        // boldNode = document.createElement('b');
-        // boldNode.appendChild(document.createTextNode(utils.capitaliseFirstLetter(pageDetailName)));
-        // pNode = document.createElement('p');
-        // pNode.appendChild(boldNode);
-        // pNode.appendChild(document.createTextNode(': '));
-        // pNode.appendChild(propertyTextNode);
-
         detailsDivNode.appendChild(pNode);
       }
     });
@@ -261,8 +237,7 @@ var app = (function(window, document) {
 
 
     results.forEach(function(result) {
-      var favoriteButton = helper.getNewFavoriteButton(isFavorite(result.id) ? 'favorite' : 'unfavorite');
-      favoriteButton.setAttribute('data-pageid', result.id);
+      var favoriteButton = helper.getNewFavoriteButton({className: isFavorite(result.id) ? 'favorite' : 'unfavorite', 'data-pageid': result.id});
 
       var resultRowStructure = [
         'li', {className: 'result-row'}, [
@@ -274,34 +249,8 @@ var app = (function(window, document) {
           ]]
         ]
       ];
-      console.log(utils.createDOMNode(resultRowStructure));
+
       resultsList.appendChild(utils.createDOMNode(resultRowStructure));
-
-      // var li = document.createElement('li');
-      // li.className = 'result-row';
-
-      // var innerList = document.createElement('ul');
-
-      // var detailsSection = document.createElement('details');
-      // var summaryNode = document.createElement('summary');
-      // summaryNode.title = 'View more details about the page';
-      // summaryNode.setAttribute('data-pageid', result.id);
-      // summaryNode.className = 'page-details';
-      // summaryNode.appendChild(document.createTextNode('Details'));
-      // detailsSection.appendChild(summaryNode);
-
-      // var favoriteButton = helper.getNewFavoriteButton(isFavorite(result.id) ? 'favorite' : 'unfavorite');
-      // favoriteButton.setAttribute('data-pageid', result.id);
-      // innerList.appendChild(favoriteButton);
-
-      // innerList.appendChild(helper.getNewListItemWith('name', result.name));
-      // innerList.appendChild(helper.getNewListItemWith('category', result.category));
-
-      // innerList.appendChild(detailsSection);
-      // // innerList.appendChild(document.createElement('hr'));
-
-      // li.appendChild(innerList);
-      // resultsList.appendChild(li);
     });
 
     getResultContainer().appendChild(resultsList);
@@ -328,7 +277,6 @@ var app = (function(window, document) {
 
     searchResults = results.data;
     displayResults(sortResultsBy(getSortField(), getSortOrder()));
-    // console.log(searchResults);
   }
 
 
