@@ -388,7 +388,7 @@ var app = (function(window, document) {
         }
       });
 
-      searchInputBox.value = 'pepsip';
+      // searchInputBox.value = 'pepsip';
       setFocusOnSearchBox();
 
       if(!getAccessToken()) {
