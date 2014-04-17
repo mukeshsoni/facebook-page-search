@@ -361,7 +361,7 @@ var app = (function(window, document) {
     showResultArea();
   }
 
-  return {
+  var innerAppObj = {
     initialize: function() {
       searchInputBox = document.getElementById('search-text');
       resultsContainer = document.getElementById('results-container');
@@ -399,6 +399,42 @@ var app = (function(window, document) {
       }
     }
   };
+
+  /* test-api */
+  innerAppObj.__testonly__ = {};
+  innerAppObj.__testonly__._getJSONP = getJSONP;
+  innerAppObj.__testonly__._toggleFavorite = toggleFavorite;
+  innerAppObj.__testonly__._isFavorite = isFavorite;
+  innerAppObj.__testonly__._sortResultsBy = sortResultsBy;
+  innerAppObj.__testonly__._getSortField = getSortField;
+  innerAppObj.__testonly__._getSortOrder = getSortOrder;
+  innerAppObj.__testonly__._showMessage = showMessage;
+  innerAppObj.__testonly__._updateResultsCount = updateResultsCount;
+  innerAppObj.__testonly__._hideResultArea = hideResultArea;
+  innerAppObj.__testonly__._showResultArea = showResultArea;
+  innerAppObj.__testonly__._toggleFavoriteClass = toggleFavoriteClass;
+  innerAppObj.__testonly__._getAccessToken = getAccessToken;
+  innerAppObj.__testonly__._searchPages = searchPages;
+  innerAppObj.__testonly__._getPageDetails = getPageDetails;
+  innerAppObj.__testonly__._validateInput = validateInput;
+  innerAppObj.__testonly__._getInputError = getInputError;
+  innerAppObj.__testonly__._setFocusOnSearchBox = setFocusOnSearchBox;
+  innerAppObj.__testonly__._getDetailsElement = getDetailsElement;
+  innerAppObj.__testonly__._appendPageDetails = appendPageDetails;
+  innerAppObj.__testonly__._showPageDetails = showPageDetails;
+  innerAppObj.__testonly__._getResultContainer = getResultContainer;
+  innerAppObj.__testonly__._populateList = populateList;
+  innerAppObj.__testonly__._handleSortClick = handleSortClick;
+  innerAppObj.__testonly__._handlePageSearchResults = handlePageSearchResults;
+  innerAppObj.__testonly__._handleSearchClick = handleSearchClick;
+  innerAppObj.__testonly__._handleSearchKeydown = handleSearchKeydown;
+  innerAppObj.__testonly__._handleDetailsClick = handleDetailsClick;
+  innerAppObj.__testonly__._handleFavoriteClick = handleFavoriteClick;
+  innerAppObj.__testonly__._handleContainerClick = handleContainerClick;
+  innerAppObj.__testonly__._displayResults = displayResults;
+  /* end-test-api */
+
+  return innerAppObj;
 }) (window, document);
 
 window.onload = function() {
